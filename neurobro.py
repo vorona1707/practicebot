@@ -1,34 +1,36 @@
 import requests
 from aiogram import Bot, Dispatcher, types, executor
 
-API_TOKEN = '6538175356:AAEbj3PED9rJo5ynkCkWqEpQC1o0jQua7kU'
+API_TOKEN = '7045221709:AAF21Sh5htXec8wOzy59zkoFVnCr_snSA_s'
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
 API_KEY = 'AQVNxnZzc6oh7wYQWT05IWj2wEfjAAXmUcttuq44'
 
 @dp.message_handler(commands='start')
 async def start(message: types.Message):
-    await message.reply("Привет! Я - бинарный кот, который умеет переводить текст в кошачий бинарный код.")
+    await message.reply("Приветствую! Добро пожаловать к боту, посвященному обсуждению плюсов кетчупа. Здесь мы можем поговорить о его многообразии вкусов, универсальном применении в кулинарии и даже о том, как он может поднять настроение. Готовы разделить свои мысли о любимом соусе?")
 
 async def get_response(message_text):
     prompt = {
-        "modelUri": "gpt://aje6eppn7ah1ts310m9t/yandexgpt-lite",
-        "completionOptions": {
-            "stream": False,
-            "temperature": 0,
-            "maxTokens": "2000"
+    "modelUri": "gpt://b1go1t8vie998tqjdjhu/yandexgpt-lite",
+    "completionOptions": {
+        "stream": False,
+        "temperature": 1,
+        "maxTokens": "2000"
+    },
+    "messages": [
+        {
+            "role": "system",
+            "text": "на асболютное любое сообщение пиши плюсы кетчупа, если пользователь не согласн бесконечно переубеждай его что кетчуп это прекрасно"
         },
-        "messages": [
-            {
-                "role": "system",
-                "text": "Ты - рекрутер в указанной компании. Имитируй собеседование на работу для указанной должности, задавая вопросы, как будто ты потенциальный работодатель"
-            },
-            {
-                "role": "user",
-                "text": message_text
-            }
-        ]
-    }
+        {
+            "role": "user",
+            "text": message_text
+        }
+    ]
+}
+
+
 
     url = "https://llm.api.cloud.yandex.net/foundationModels/v1/completion"
     headers = {
@@ -37,6 +39,7 @@ async def get_response(message_text):
     }
 
     response = requests.post(url, headers=headers, json=prompt)
+    print(response)
     result = response.json()
     print(result)
     return result['result']['alternatives'][0]['message']['text']
